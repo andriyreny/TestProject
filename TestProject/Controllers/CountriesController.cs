@@ -9,10 +9,11 @@ namespace TestProject.Controllers
     {
         private const string propertyName = "name";
         private const string propertyCommon = "common";
+        private const string propertyPopulation = "population";
         private const string apiUrl = "https://restcountries.com/v3.1/all";
 
         [HttpGet(Name = "GetCountries")]
-        public async Task<string> Get(string? countryName = null, int argument2 = 0, string? argument3 = null)
+        public async Task<string> Get(string? countryName = null, int countryPopulation = 0, string? argument3 = null)
         {
             var httpClient = new HttpClient();
             using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
@@ -25,6 +26,14 @@ namespace TestProject.Controllers
                 var jArray = countriesArray.Where(d => d[propertyName] != null 
                 && d[propertyName]?[propertyCommon] != null
                 && ((string?)d[propertyName]?[propertyCommon] ?? string.Empty).Contains(countryName, StringComparison.OrdinalIgnoreCase));
+
+                countriesArray = new JArray(jArray);
+            }
+
+            if (countryPopulation > 0)
+            {
+                var jArray = countriesArray.Where(d => d[propertyPopulation] != null
+                 && (d[propertyPopulation]?.ToObject<long>() / 1000000) < countryPopulation);
 
                 countriesArray = new JArray(jArray);
             }
