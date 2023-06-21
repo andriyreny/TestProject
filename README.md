@@ -8,7 +8,7 @@ where NNNN is the number from the Swagger app URL which is run by default from V
 •	countryPopulation - a parameter that is used for filtering country data by country population.    
 •	sortOption - a parameter that is used for sorting country data. It can be only "ascend" or "descend";    
 •	paginateNumber - a parameter that is used to get paginated country data.    
-Examples of how to use the app:    
+5.	Examples of how to use the app:    
 •	Case 1) Set the above URL in the Postman app.  
 •	Do not set parameters in the Postman app. Send a request to the endpoint in the Postman app. The app will return all data about all countries.  
 •	Case 3) Set parameter countryName - to value "al" in the Postman app. Send a request to the endpoint in the Postman app. The app will return all data about countries with the letters "al" in the name.  
