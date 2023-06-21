@@ -13,9 +13,9 @@ namespace TestProject.Helpers
             _sortDirection = sortDirection;
         }
 
-        public int Compare(JObject a, JObject b)
+        public int Compare(JObject? a, JObject? b)
         {
-            var compareResult = string.Compare((string)a.SelectToken(_fieldCountryName), (string)b.SelectToken(_fieldCountryName));
+            var compareResult = string.Compare((string?)a?.SelectToken(_fieldCountryName), (string?)b?.SelectToken(_fieldCountryName));
 
             if (_sortDirection == "descend")
             {
