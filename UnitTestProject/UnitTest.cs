@@ -1,19 +1,23 @@
+using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System.Net;
+using TestProject.Configurations;
 using TestProject.Controllers;
 
 namespace UnitTestProject
 {
     public class UnitTests
     {
-        private string FieldCountryName = "name.common";
-        private string FieldCountryPopulation = "population";
+        private const string FieldCountryName = "name.common";
+        private const string FieldCountryPopulation = "population";
+
+        private Mock<IOptions<CustomSettings>> m_sustomSettingsOptions;
+        private Mock<HttpMessageHandler> m_handlerMock;
         private CountriesController m_countriesController;
         private HttpClient m_httpClient;
-        private Mock<HttpMessageHandler> m_handlerMock;
         private string? m_countryName = null;
         private int m_countryPopulation = 0;
         private string? m_sortOption = null;
@@ -42,7 +46,15 @@ namespace UnitTestProject
 
             m_httpClient = new HttpClient(m_handlerMock.Object);
 
-            m_countriesController = new CountriesController(m_httpClient);
+            m_sustomSettingsOptions = new Mock<IOptions<CustomSettings>>();
+           
+            m_sustomSettingsOptions.Setup(x => x.Value)
+                .Returns(new CustomSettings
+                {
+                    ApiUrl = "http://test"
+                });
+
+            m_countriesController = new CountriesController(m_httpClient, m_sustomSettingsOptions.Object);
         }
 
         [Test]
@@ -115,7 +127,7 @@ namespace UnitTestProject
 
             var jsText = await m_countriesController.Get(m_countryName, m_countryPopulation, m_sortOption, m_paginateNumber);
             var jArray = JArray.Parse(jsText);
-            var result = jArray.Count();
+            var result = jArray.Count;
 
             Assert.That(result, Is.EqualTo(1));
         }

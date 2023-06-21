@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace TestProject.Helpers
+namespace TestProject.Comparers
 {
     public class CountryNameComparer : IComparer<JObject>
     {
-        private string _fieldCountryName;
-        private string _sortDirection;
+        private readonly string _fieldCountryName;
+        private readonly string _sortDirection;
 
         public CountryNameComparer(string fieldCountryName, string sortDirection)
         {

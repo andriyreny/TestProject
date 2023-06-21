@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
-using TestProject.Helpers;
+using TestProject.Comparers;
+using TestProject.Configurations;
 
 namespace TestProject.Controllers
 {
@@ -9,16 +12,17 @@ namespace TestProject.Controllers
     public class CountriesController : ControllerBase
     {
         private readonly HttpClient m_httpClient;
-        private string m_fieldCountryName = "name.common";
-        private string m_fieldCountryPopulation = "population";
+        private readonly CustomSettings _settings;
 
+        private const string m_fieldCountryName = "name.common";
+        private const string m_fieldCountryPopulation = "population";
         private const string FieldAscend = "ascend";
         private const string FieldDescend = "descend";
-        private const string ApiUrl = "https://restcountries.com/v3.1/all";
 
-        public CountriesController(HttpClient httpClient)
+        public CountriesController(HttpClient httpClient, IOptions<CustomSettings> settings)
         {
             m_httpClient = httpClient;
+            _settings = settings.Value;
         }
 
         [HttpGet(Name = "GetCountries")]
@@ -27,7 +31,7 @@ namespace TestProject.Controllers
             string? sortOption = null, 
             int paginateNumber = 0)
         {
-            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, ApiUrl);
+            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, _settings.ApiUrl);
             using HttpResponseMessage response = await m_httpClient.SendAsync(request);
             string jsonContent = await response.Content.ReadAsStringAsync();
             JArray countriesArray = JArray.Parse(jsonContent);
@@ -83,7 +87,7 @@ namespace TestProject.Controllers
             return countriesArray;
         }
 
-        private JArray PaginateCountries(JArray countriesArray, int paginateNumber = 0)
+        private static JArray PaginateCountries(JArray countriesArray, int paginateNumber = 0)
         {
             if (paginateNumber > 0)
             {
