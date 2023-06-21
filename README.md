@@ -1,4 +1,5 @@
-Application description.Prepare environment description:  
+Application description  
+Prepare environment description:    
 1.	Download sources, and open the project with Visual Studio 2022(sources use .NET 6)  
 2.	Download Postman app - https://www.postman.com/ and use it for test app. Swagger app which is run by default from Visual Studio 2022 after the project run will freeze since the app endpoint returns a lot of data. For this reason, I do not advise using the default Swagger app.  
 3.	Run project, run Postman app. Use the next URL for app testing: https://localhost:NNNN/Countries   
