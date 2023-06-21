@@ -44,7 +44,7 @@ namespace TestProject.Controllers
             return countriesArray.ToString();
         }
 
-        private JArray FilterCountriesByName(JArray countriesArray, string? countryName = null)
+        private static JArray FilterCountriesByName(JArray countriesArray, string? countryName = null)
         {
             if (!string.IsNullOrEmpty(countryName))
             {
@@ -56,7 +56,7 @@ namespace TestProject.Controllers
             return countriesArray;
         }
 
-        private JArray FilterCountriesByPopulation(JArray countriesArray, int countryPopulation = 0)
+        private static JArray FilterCountriesByPopulation(JArray countriesArray, int countryPopulation = 0)
         {
             if (countryPopulation > 0)
             {
@@ -68,7 +68,7 @@ namespace TestProject.Controllers
             return countriesArray;
         }
 
-        private JArray SortCountries(JArray countriesArray, string? sortOption = null)
+        private static JArray SortCountries(JArray countriesArray, string? sortOption = null)
         {
             if (!string.IsNullOrEmpty(sortOption))
             {
