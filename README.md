@@ -3,7 +3,7 @@ Instruction how to use app:
 2.	Download Postman app - https://www.postman.com/ and use it for test app. Swagger app which is run by default from Visual Studio 2022 after the project run will freeze since the app endpoint returns a lot of data. For this reason, I do not advise using the default Swagger app.  
 3.	Run project, run Postman app. Use the next URL for app testing: https://localhost:NNNN/Countries   
 where NNNN is the number from the Swagger app URL which is run by default from Visual Studio 2022 after the project run.  
-Use the next parameters for the app testing:  
+4.	Use the next parameters for the app testing:  
 •	countryName - parameter that is used for filter country data by country name.    
 •	countryPopulation - a parameter that is used for filtering country data by country population.    
 •	sortOption - a parameter that is used for sorting country data. It can be only "ascend" or "descend";    
