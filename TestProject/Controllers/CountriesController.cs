@@ -8,11 +8,18 @@ namespace TestProject.Controllers
     [Route("[controller]")]
     public class CountriesController : ControllerBase
     {
-        private string fieldCountryName = "name.common";
-        private string fieldCountryPopulation = "population";
-        private const string propertyAscend = "ascend";
-        private const string propertyDescend = "descend";
-        private const string apiUrl = "https://restcountries.com/v3.1/all";
+        private readonly HttpClient m_httpClient;
+        private string m_fieldCountryName = "name.common";
+        private string m_fieldCountryPopulation = "population";
+
+        private const string FieldAscend = "ascend";
+        private const string FieldDescend = "descend";
+        private const string ApiUrl = "https://restcountries.com/v3.1/all";
+
+        public CountriesController(HttpClient httpClient)
+        {
+            m_httpClient = httpClient;
+        }
 
         [HttpGet(Name = "GetCountries")]
         public async Task<string> Get(string? countryName = null, 
@@ -20,9 +27,8 @@ namespace TestProject.Controllers
             string? sortOption = null, 
             int paginateNumber = 0)
         {
-            var httpClient = new HttpClient();
-            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
-            using HttpResponseMessage response = await httpClient.SendAsync(request);
+            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, ApiUrl);
+            using HttpResponseMessage response = await m_httpClient.SendAsync(request);
             string jsonContent = await response.Content.ReadAsStringAsync();
             JArray countriesArray = JArray.Parse(jsonContent);
 
@@ -39,7 +45,7 @@ namespace TestProject.Controllers
             if (!string.IsNullOrEmpty(countryName))
             {
                 var jArray = countriesArray.Where(d =>
-                (d.SelectToken(fieldCountryName)?.ToString() ?? string.Empty).Contains(countryName, StringComparison.OrdinalIgnoreCase));
+                (d.SelectToken(m_fieldCountryName)?.ToString() ?? string.Empty).Contains(countryName, StringComparison.OrdinalIgnoreCase));
                 countriesArray = new JArray(jArray);
             }
 
@@ -51,7 +57,7 @@ namespace TestProject.Controllers
             if (countryPopulation > 0)
             {
                 var jArray = countriesArray.Where(d =>
-                (d.SelectToken(fieldCountryPopulation)?.ToObject<long>() / 1000000) < countryPopulation);
+                (d.SelectToken(m_fieldCountryPopulation)?.ToObject<long>() / 1000000) < countryPopulation);
                 countriesArray = new JArray(jArray);
             }
 
@@ -62,14 +68,14 @@ namespace TestProject.Controllers
         {
             if (!string.IsNullOrEmpty(sortOption))
             {
-                if (sortOption.ToLower() == propertyAscend)
+                if (sortOption.ToLower() == FieldAscend)
                 {
-                    var comparer = new CountryNameComparer(fieldCountryName, propertyAscend);
+                    var comparer = new CountryNameComparer(m_fieldCountryName, FieldAscend);
                     countriesArray = new JArray(countriesArray.AsQueryable().OrderBy(obj => (JObject)obj, comparer));
                 }
-                if (sortOption.ToLower() == propertyDescend)
+                if (sortOption.ToLower() == FieldDescend)
                 {
-                    var comparer = new CountryNameComparer(fieldCountryName, propertyDescend);
+                    var comparer = new CountryNameComparer(m_fieldCountryName, FieldDescend);
                     countriesArray = new JArray(countriesArray.AsQueryable().OrderBy(obj => (JObject)obj, comparer));
                 }
             }
